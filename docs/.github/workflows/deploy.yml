@@ -1,0 +1,25 @@
+name: 博客自动部署
+on:
+  push:
+    branches: [ main ]
+permissions:
+  contents: write
+  pages: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 配置Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: 安装MkDocs
+        run: pip install mkdocs
+      - name: 构建静态网页
+        run: mkdocs build
+      - name: 发布Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
