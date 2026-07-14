@@ -1,0 +1,27 @@
+name: MkDocs Blog Deploy
+on:
+  push:
+    branches: [ main ]
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取仓库代码
+        uses: actions/checkout@v4
+      - name: 配置Python环境
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: 安装MkDocs工具
+        run: pip install mkdocs
+      - name: 构建静态网页
+        run: mkdocs build
+      - name: 部署到GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
